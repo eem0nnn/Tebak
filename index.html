@@ -5,16 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Happy Anniversary</title>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-    body, html {
-      height: 100%;
-      font-family: 'Comic Sans MS', cursive, sans-serif;
-      overflow: hidden;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body, html { height: 100%; font-family: 'Comic Sans MS', cursive; overflow: hidden; }
+
     .slide {
       display: none;
       position: absolute;
@@ -25,41 +18,38 @@
       flex-direction: column;
       text-align: center;
       padding: 20px;
-      background-size: cover;
-      background-position: center;
     }
-    .active {
-      display: flex;
-    }
+    .active { display: flex; }
+
     .btn-nav {
       position: absolute;
       bottom: 30px;
-      background-color: rgba(255, 255, 255, 0.7);
+      background: rgba(255, 255, 255, 0.7);
       border: none;
       padding: 10px 20px;
       font-size: 1rem;
-      cursor: pointer;
       border-radius: 10px;
-      transition: background 0.3s;
+      cursor: pointer;
     }
-    .btn-nav:hover {
-      background-color: #ffe0e0;
+    .btn-nav:hover { background-color: #ffe0e0; }
+    .btn-next { right: 30px; }
+    .btn-back { left: 30px; }
+
+    video.bgvid {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -1;
     }
-    .btn-next {
-      right: 30px;
-    }
-    .btn-back {
-      left: 30px;
-    }
-    .slide2, .slide3 {
-      background: linear-gradient(to bottom right, #fff0f5, #ffe4e1);
-    }
-    .rundown, .message {
+
+    .message {
       font-size: 1.2rem;
       color: #b03060;
       margin-bottom: 30px;
-      white-space: pre-line;
     }
+
     .gallery {
       display: flex;
       flex-wrap: wrap;
@@ -73,58 +63,43 @@
       border-radius: 15px;
       box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
     }
-    video.bg-video {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      z-index: -1;
-    }
-    audio {
-      display: none;
-    }
   </style>
 </head>
 <body>
 
-  <!-- MUSIC -->
+  <!-- Background music -->
   <audio autoplay loop>
-    <source src="ssstik.io_1750979781342.mp3" type="audio/mp3" />
-    Your browser does not support the audio element.
+    <source src="ssstik.io_1750979781342.mp3" type="audio/mpeg">
   </audio>
 
-  <!-- SLIDE 1 WITH VIDEO BACKGROUND -->
+  <!-- Slide 1: Opening video -->
   <div class="slide slide1 active">
-    <video class="bg-video" autoplay loop muted playsinline>
-      <source src="Pink and White Watercolor Valentine’s Day Video.mp4" type="video/mp4">
-      Your browser does not support the video tag.
+    <video class="bgvid" autoplay loop muted playsinline>
+      <source src="Pink and White Watercolor Valentine’s Day Video.mp4" type="video/mp4" />
     </video>
     <button class="btn-nav btn-next" onclick="nextSlide()">Next ➤</button>
   </div>
 
-  <!-- SLIDE 2 -->
+  <!-- Slide 2: Rundown video -->
   <div class="slide slide2">
-    <div class="rundown">
-      19.00 - Makan malam<br>
-      19.30 - Tonton video kenangan<br>
-      20.00 - Tukar kado<br>
-      20.30 - Quality time bareng
-    </div>
+    <video class="bgvid" autoplay loop muted playsinline>
+      <source src="RUNDOWN.mp4" type="video/mp4" />
+    </video>
     <button class="btn-nav btn-back" onclick="prevSlide()">◀ Back</button>
     <button class="btn-nav btn-next" onclick="nextSlide()">Next ➤</button>
   </div>
 
-  <!-- SLIDE 3 -->
-  <div class="slide slide3">
+  <!-- Slide 3: Message + Gallery -->
+  <div class="slide slide3" style="background: linear-gradient(to bottom right, #fff0f5, #ffe4e1);">
     <div class="message">
       "Thank you for always being there, through every laugh, fight, and little moment in between.<br>
       One year down, forever to go. 💗"
     </div>
     <div class="gallery">
-      <img src="https://via.placeholder.com/150" alt="Photo 1">
-      <img src="https://via.placeholder.com/150" alt="Photo 2">
-      <img src="https://via.placeholder.com/150" alt="Photo 3">
-      <img src="https://via.placeholder.com/150" alt="Photo 4">
+      <img src="https://via.placeholder.com/150" alt="Photo 1" />
+      <img src="https://via.placeholder.com/150" alt="Photo 2" />
+      <img src="https://via.placeholder.com/150" alt="Photo 3" />
+      <img src="https://via.placeholder.com/150" alt="Photo 4" />
     </div>
     <button class="btn-nav btn-back" onclick="prevSlide()">◀ Back</button>
   </div>
@@ -147,6 +122,5 @@
       if (current > 0) showSlide(current - 1);
     }
   </script>
-
 </body>
 </html>
