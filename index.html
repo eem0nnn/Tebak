@@ -3,148 +3,108 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Happy Anniversary</title>
+  <title>Happy Anniversary 💖</title>
   <style>
-    * {
-      box-sizing: border-box;
+    body {
       margin: 0;
-      padding: 0;
-    }
-    body, html {
-      height: 100%;
+      background-color: #ffe6ee;
       font-family: 'Comic Sans MS', cursive, sans-serif;
-      overflow: hidden;
-    }
-    .slide {
-      display: none;
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
       text-align: center;
-      padding: 20px;
-      background-size: cover;
-      background-position: center;
     }
-    .active {
-      display: flex;
+
+    video {
+      max-width: 90vw;
+      max-height: 80vh;
+      margin-top: 20px;
+      border-radius: 20px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.2);
     }
-    .btn-nav {
-      position: absolute;
-      bottom: 30px;
-      background-color: rgba(255, 255, 255, 0.7);
-      border: none;
+
+    .controls {
+      margin-top: 20px;
+    }
+
+    button {
       padding: 10px 20px;
-      font-size: 1rem;
-      cursor: pointer;
+      font-size: 18px;
+      background-color: #ff99cc;
+      color: white;
+      border: none;
       border-radius: 10px;
-      transition: background 0.3s;
+      margin: 5px;
+      cursor: pointer;
     }
-    .btn-nav:hover {
-      background-color: #ffe0e0;
-    }
-    .btn-next {
-      right: 30px;
-    }
-    .btn-back {
-      left: 30px;
-    }
-    .slide3 {
-      background: linear-gradient(to bottom right, #fff0f5, #ffe4e1);
-    }
-    .message {
-      font-size: 1.2rem;
-      color: #b03060;
-      margin-bottom: 30px;
-      white-space: pre-line;
-    }
-    .gallery {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
-    }
-    .gallery img {
-      width: 150px;
-      height: 150px;
-      object-fit: cover;
-      border-radius: 15px;
-      box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
-    }
-    video.bg-video {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      position: absolute;
-      z-index: -1;
+
+    button:hover {
+      background-color: #ff66a3;
     }
   </style>
 </head>
 <body>
 
-  <!-- Background music -->
-  <audio id="bgmusic" preload="auto" autoplay loop>
+  <!-- BGM -->
+  <audio id="bgm" autoplay loop>
     <source src="ssstik.io_1750979781342.mp3" type="audio/mpeg">
+    Your browser does not support the audio element.
   </audio>
 
-  <!-- Slide 1 with video -->
-  <div class="slide slide1 active">
-    <video class="bg-video" autoplay muted loop playsinline>
-      <source src="Pink and White Watercolor Valentine’s Day Video.mp4" type="video/mp4">
-    </video>
-    <button class="btn-nav btn-next" onclick="nextSlide()">Next ➤</button>
+  <h1>Happy Anniversary 💕</h1>
+
+  <!-- VIDEO -->
+  <video id="slideVideo" controls autoplay muted>
+    <source id="videoSource" src="Pink and White Watercolor Valentine’s Day Video.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+
+  <!-- NAVIGATION -->
+  <div class="controls">
+    <button onclick="prevSlide()">◀ Back</button>
+    <button onclick="nextSlide()">Next ▶</button>
+    <button onclick="toggleMusic()">🎵 Toggle Music</button>
   </div>
 
-  <!-- Slide 2 with video -->
-  <div class="slide slide2">
-    <video class="bg-video" autoplay muted loop playsinline>
-      <source src="RUNDOWN.mp4" type="video/mp4">
-    </video>
-    <button class="btn-nav btn-back" onclick="prevSlide()">◀ Back</button>
-    <button class="btn-nav btn-next" onclick="nextSlide()">Next ➤</button>
-  </div>
-
-  <!-- Slide 3 with message and photos -->
-  <div class="slide slide3">
-    <div class="message">
-      "Thank you for always being there, through every laugh, fight, and little moment in between. <br>
-      One year down, forever to go. 💗"
-    </div>
-    <div class="gallery">
-      <img src="https://via.placeholder.com/150" alt="Photo 1">
-      <img src="https://via.placeholder.com/150" alt="Photo 2">
-      <img src="https://via.placeholder.com/150" alt="Photo 3">
-      <img src="https://via.placeholder.com/150" alt="Photo 4">
-    </div>
-    <button class="btn-nav btn-back" onclick="prevSlide()">◀ Back</button>
-  </div>
-
-  <!-- Slide navigation script -->
   <script>
-    let current = 0;
-    const slides = document.querySelectorAll(".slide");
-    function showSlide(index) {
-      slides.forEach(slide => slide.classList.remove("active"));
-      slides[index].classList.add("active");
-      current = index;
-    }
-    function nextSlide() {
-      if (current < slides.length - 1) showSlide(current + 1);
-    }
-    function prevSlide() {
-      if (current > 0) showSlide(current - 1);
+    const videos = [
+      "Pink and White Watercolor Valentine’s Day Video.mp4",
+      "RUNDOWN.mp4",
+      "Recap.mp4"
+    ];
+    let currentIndex = 0;
+
+    const video = document.getElementById("slideVideo");
+    const videoSource = document.getElementById("videoSource");
+    const bgm = document.getElementById("bgm");
+
+    function updateVideo() {
+      video.pause();
+      videoSource.src = videos[currentIndex];
+      video.load();
+      video.play();
     }
 
-    // Play music after user interaction
-    window.addEventListener('DOMContentLoaded', () => {
-      const music = document.getElementById('bgmusic');
-      const playOnce = () => {
-        music.play().catch(() => {});
-        document.body.removeEventListener('click', playOnce);
-      };
-      document.body.addEventListener('click', playOnce);
+    function nextSlide() {
+      currentIndex = (currentIndex + 1) % videos.length;
+      updateVideo();
+    }
+
+    function prevSlide() {
+      currentIndex = (currentIndex - 1 + videos.length) % videos.length;
+      updateVideo();
+    }
+
+    function toggleMusic() {
+      if (bgm.paused) {
+        bgm.play();
+      } else {
+        bgm.pause();
+      }
+    }
+
+    // Unmute video after slight delay for autoplay to succeed
+    window.addEventListener('load', () => {
+      setTimeout(() => {
+        video.muted = false;
+      }, 1000);
     });
   </script>
 
