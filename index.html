@@ -3,54 +3,83 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Anniversary Website</title>
+  <title>Anniversary Slideshow</title>
   <style>
-    body {
+    * {
       margin: 0;
-      background-color: #ffe6ee;
-      font-family: 'Comic Sans MS', cursive, sans-serif;
-      text-align: center;
-      overflow-x: hidden;
+      padding: 0;
+      box-sizing: border-box;
     }
 
-    video, .text-slide {
-      max-width: 90vw;
-      max-height: 80vh;
-      margin-top: 20px;
-      border-radius: 20px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.2);
-      opacity: 0;
+    html, body {
+      height: 100%;
+      width: 100%;
+      font-family: 'Segoe UI', sans-serif;
+      overflow: hidden;
+      background-color: #fef1f5;
+    }
+
+    .slide {
+      display: none;
+      height: 100vh;
+      width: 100vw;
+      position: absolute;
+      top: 0;
+      left: 0;
+      justify-content: center;
+      align-items: center;
+      background-color: #fff0f6;
+      padding: 20px;
       transition: opacity 1s ease-in-out;
     }
 
-    .visible {
-      opacity: 1;
+    .slide video {
+      max-width: 100%;
+      max-height: 100%;
+      border-radius: 15px;
+      box-shadow: 0 0 30px rgba(0,0,0,0.2);
     }
 
-    .controls {
-      margin-top: 20px;
-    }
-
-    button {
-      padding: 10px 20px;
-      font-size: 18px;
-      background-color: #ff99cc;
-      color: white;
-      border: none;
-      border-radius: 10px;
-      margin: 5px;
-      cursor: pointer;
-    }
-
-    button:hover {
-      background-color: #ff66a3;
+    .slide.visible {
+      display: flex;
+      z-index: 1;
     }
 
     .text-slide {
-      padding: 20px;
+      color: #333;
       font-size: 18px;
+      max-width: 800px;
       white-space: pre-wrap;
+      line-height: 1.6;
       background-color: white;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    }
+
+    .controls {
+      position: fixed;
+      bottom: 20px;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      padding: 0 30px;
+      z-index: 2;
+    }
+
+    .controls button {
+      background-color: #ff69b4;
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 30px;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    .controls button:hover {
+      background-color: #ff1493;
     }
 
     #musicBtn {
@@ -58,13 +87,13 @@
       top: 15px;
       left: 15px;
       z-index: 999;
-      background: #ff99cc;
+      background: #ff69b4;
     }
   </style>
 </head>
 <body>
 
-  <!-- Tombol untuk manual start musik di HP -->
+  <!-- Tombol untuk manual start musik -->
   <button id="musicBtn" onclick="startMusic()">▶ Start Music</button>
 
   <!-- Audio autoplay -->
@@ -73,23 +102,27 @@
     Your browser does not support the audio element.
   </audio>
 
-  <h1>Happy Anniversary 💕</h1>
-
-  <!-- Slide kontainer -->
-  <div id="slideContainer">
-    <video class="slide visible" id="video1" muted>
-      <source src="Pink and White Watercolor Valentine’s Day Video.mp4" type="video/mp4" />
+  <!-- SLIDES -->
+  <div class="slide visible">
+    <video muted autoplay loop>
+      <source src="Pink and White Watercolor Valentine’s Day Video.mp4" type="video/mp4">
     </video>
+  </div>
 
-    <video class="slide" id="video2" muted>
-      <source src="RUNDOWN.mp4" type="video/mp4" />
+  <div class="slide">
+    <video muted autoplay loop>
+      <source src="RUNDOWN.mp4" type="video/mp4">
     </video>
+  </div>
 
-    <video class="slide" id="video3" muted>
-      <source src="Recap.mp4" type="video/mp4" />
+  <div class="slide">
+    <video muted autoplay loop>
+      <source src="Recap.mp4" type="video/mp4">
     </video>
+  </div>
 
-    <div class="slide text-slide" id="textSlide">
+  <div class="slide">
+    <div class="text-slide">
       Haloo sayang, ga kerasa udah setahun lebih. Keknya baru kemaren kita pacaran masih awkward, suka behual wkwkwk, masih belajar ngerti satu sama lain. Kalo sekarang? tetap suka bekelahi pang, tapi levelnya udah beda (sumala). Preng
 
       Jujur, aku mau banar ngerayain momen ini dari kemaren-kemaren, di Hari H, Tapi yaaaa gitu ada kerjaan yang mendadak dll. Aku minta maaf banar harus ngundur momden ini hampir dua bulan, aku tahu sayang nungguin dan aku jua sedih bnr ngebayangin sayang harus nahan ekspektasi, Tapi percaya ja, dari awal, ini lain karena aku lupa atau kd anggap pentig. Aku mau kasih Waktu yang proper, yang kita bisa nikmati bedua.
@@ -104,38 +137,39 @@
     </div>
   </div>
 
+  <!-- Kontrol -->
   <div class="controls">
     <button onclick="prevSlide()">◀ Back</button>
     <button onclick="nextSlide()">Next ▶</button>
   </div>
 
   <script>
-    const slides = Array.from(document.querySelectorAll('.slide'));
-    let currentIndex = 0;
+    const slides = document.querySelectorAll('.slide');
+    let currentSlide = 0;
 
     function showSlide(index) {
       slides.forEach((slide, i) => {
         slide.classList.remove('visible');
-        if (slide.tagName === 'VIDEO') slide.pause();
+        if (slide.querySelector('video')) slide.querySelector('video').pause();
       });
 
-      const currentSlide = slides[index];
-      currentSlide.classList.add('visible');
-
-      if (currentSlide.tagName === 'VIDEO') {
-        currentSlide.currentTime = 0;
-        currentSlide.play();
+      const selected = slides[index];
+      selected.classList.add('visible');
+      const video = selected.querySelector('video');
+      if (video) {
+        video.currentTime = 0;
+        video.play();
       }
     }
 
     function nextSlide() {
-      currentIndex = (currentIndex + 1) % slides.length;
-      showSlide(currentIndex);
+      currentSlide = (currentSlide + 1) % slides.length;
+      showSlide(currentSlide);
     }
 
     function prevSlide() {
-      currentIndex = (currentIndex - 1 + slides.length) % slides.length;
-      showSlide(currentIndex);
+      currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+      showSlide(currentSlide);
     }
 
     function startMusic() {
@@ -145,10 +179,9 @@
     }
 
     window.addEventListener('load', () => {
-      // Coba autoplay audio setelah beberapa waktu (jaga-jaga)
       setTimeout(() => {
         startMusic();
-      }, 2000);
+      }, 1500);
     });
   </script>
 
