@@ -12,12 +12,35 @@
       text-align: center;
     }
 
-    video {
+    #slideContainer {
       max-width: 90vw;
       max-height: 80vh;
-      margin-top: 20px;
+      margin: 30px auto 0;
       border-radius: 20px;
       box-shadow: 0 0 20px rgba(0,0,0,0.2);
+      overflow: hidden;
+    }
+
+    video {
+      width: 100%;
+      height: auto;
+      border-radius: 20px;
+    }
+
+    .romantic-text {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 60vh;
+      padding: 40px;
+      font-size: 28px;
+      color: #ff4081;
+      animation: fadeText 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes fadeText {
+      from { opacity: 0.6; }
+      to { opacity: 1; }
     }
 
     .controls {
@@ -42,7 +65,6 @@
 </head>
 <body>
 
-  <!-- BGM -->
   <audio id="bgm" autoplay loop>
     <source src="ssstik.io_1750979781342.mp3" type="audio/mpeg">
     Your browser does not support the audio element.
@@ -50,61 +72,67 @@
 
   <h1>Happy Anniversary 💕</h1>
 
-  <!-- VIDEO -->
-  <video id="slideVideo" controls autoplay muted>
-    <source id="videoSource" src="Pink and White Watercolor Valentine’s Day Video.mp4" type="video/mp4">
-    Your browser does not support the video tag.
-  </video>
+  <!-- CONTAINER UNTUK SLIDE VIDEO / TEKS -->
+  <div id="slideContainer">
+    <video id="videoPlayer" controls autoplay muted>
+      <source id="videoSource" src="slide1.mp4" type="video/mp4" />
+      Your browser does not support the video tag.
+    </video>
+  </div>
 
-  <!-- NAVIGATION -->
   <div class="controls">
     <button onclick="prevSlide()">◀ Back</button>
     <button onclick="nextSlide()">Next ▶</button>
-    <button onclick="toggleMusic()">🎵 Toggle Music</button>
   </div>
 
   <script>
-    const videos = [
-      "Pink and White Watercolor Valentine’s Day Video.mp4",
-      "RUNDOWN.mp4",
-      "Recap.mp4"
+    const slideContainer = document.getElementById("slideContainer");
+
+    const slides = [
+      { type: "video", src: "slide1.mp4" },
+      { type: "video", src: "slide2.mp4" },
+      { type: "video", src: "Recap.mp4" },
+      { type: "text", content: "Tak ada kata yang cukup indah untuk menggambarkan betapa berartinya kamu bagiku. Terima kasih telah menjadi rumah dan pelangi dalam hari-hariku. Selamat hari jadi, cinta 💖" }
     ];
+
     let currentIndex = 0;
 
-    const video = document.getElementById("slideVideo");
-    const videoSource = document.getElementById("videoSource");
-    const bgm = document.getElementById("bgm");
+    function renderSlide(index) {
+      const slide = slides[index];
+      slideContainer.innerHTML = ""; // clear isi kontainer
 
-    function updateVideo() {
-      video.pause();
-      videoSource.src = videos[currentIndex];
-      video.load();
-      video.play();
-    }
-
-    function nextSlide() {
-      currentIndex = (currentIndex + 1) % videos.length;
-      updateVideo();
-    }
-
-    function prevSlide() {
-      currentIndex = (currentIndex - 1 + videos.length) % videos.length;
-      updateVideo();
-    }
-
-    function toggleMusic() {
-      if (bgm.paused) {
-        bgm.play();
-      } else {
-        bgm.pause();
+      if (slide.type === "video") {
+        const video = document.createElement("video");
+        video.setAttribute("controls", "");
+        video.setAttribute("autoplay", "");
+        video.setAttribute("muted", "");
+        video.innerHTML = `<source src="${slide.src}" type="video/mp4">Your browser does not support video.`;
+        video.style.borderRadius = "20px";
+        video.style.width = "100%";
+        slideContainer.appendChild(video);
+        // Unmute setelah delay
+        setTimeout(() => { video.muted = false }, 1000);
+      } else if (slide.type === "text") {
+        const div = document.createElement("div");
+        div.className = "romantic-text";
+        div.innerText = slide.content;
+        slideContainer.appendChild(div);
       }
     }
 
-    // Unmute video after slight delay for autoplay to succeed
+    function nextSlide() {
+      currentIndex = (currentIndex + 1) % slides.length;
+      renderSlide(currentIndex);
+    }
+
+    function prevSlide() {
+      currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+      renderSlide(currentIndex);
+    }
+
+    // Render pertama kali
     window.addEventListener('load', () => {
-      setTimeout(() => {
-        video.muted = false;
-      }, 1000);
+      renderSlide(currentIndex);
     });
   </script>
 
